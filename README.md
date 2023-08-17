@@ -2,13 +2,13 @@
 Just practicing and implementing Go in a backend project for studies
 
 # CRUD
-- Product
+### Product
     - [x] Create
     - [x] Read
     - [x] Update
     - [x] Delete
 
-- Stock
+### Stock
     - [ ] Create
     - [ ] Read
     - [ ] Update
