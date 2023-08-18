@@ -1,16 +1,23 @@
 package configs
 
 import (
+	"goplace/models"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-func DbCon() *gorm.DB {
+var DB *gorm.DB
+
+func ConnectionDatabase() {
 	dns := "root:password@tcp(127.0.0.1:3306)/goplace?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{})
+	database, err := gorm.Open(mysql.Open(dns), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
 
-	return db
+	//Run migrations
+	database.AutoMigrate(&models.Product{}, &models.Stock{})
+
+	DB = database
 }
