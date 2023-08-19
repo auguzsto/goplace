@@ -5,6 +5,7 @@ import (
 	"goplace/dto"
 	"goplace/models"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -92,4 +93,25 @@ func UpdatePriceByProductId(c *gin.Context) {
 	configs.DB.Preload("Product").Where("product_id = ?", c.Param("product_id")).First(&price)
 
 	c.IndentedJSON(http.StatusOK, price)
+}
+
+func DetelePriceByProductId(c *gin.Context) {
+	var price models.Price
+	time := time.Now()
+
+	if err := configs.DB.Where("product_id = ? ", c.Param("product_id")).First(&price).Error; err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	if err := configs.DB.Model(&price).Updates(&models.Price{
+		DeletedAt: time,
+	}).Error; err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	configs.DB.Preload("Product").Find(&price)
+
+	c.IndentedJSON(http.StatusOK, &price)
 }
