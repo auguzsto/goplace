@@ -10,6 +10,6 @@ func ProductRoute(router *gin.Engine) {
 	router.GET("/products", controllers.FindAllProducts)
 	router.GET("/products/:id", controllers.FindByIdProduct)
 	router.POST("/products", controllers.AddProduct)
-	router.PATCH("/products/:id", controllers.UpdateById)
+	router.PATCH("/products/:id", controllers.UpdateProductById)
 	router.DELETE("/products/:id", controllers.DeleteById)
 }

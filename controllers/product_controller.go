@@ -43,7 +43,7 @@ func AddProduct(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, product)
 }
 
-func UpdateById(c *gin.Context) {
+func UpdateProductById(c *gin.Context) {
 
 	var product models.Product
 	var dto dto.ProductDTO

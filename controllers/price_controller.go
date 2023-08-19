@@ -67,3 +67,27 @@ func AddPrice(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, dto)
 
 }
+
+func UpdatePriceByProductId(c *gin.Context) {
+	var price models.Price
+	var dto dto.PriceDTO
+
+	if err := c.ShouldBindJSON(&dto); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	if err := configs.DB.Model(&price).Where("product_id = ?", c.Param("product_id")).Updates(&models.Price{
+		QuantityMost: dto.QuantityMost,
+		Price:        dto.Price,
+		PriceMost:    dto.PriceMost,
+		PriceOffer:   dto.PriceOffer,
+	}).Error; err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	configs.DB.Where("product_id = ?", c.Param("product_id")).First(&price)
+
+	c.IndentedJSON(http.StatusOK, price)
+}
