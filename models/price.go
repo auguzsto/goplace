@@ -1,8 +1,8 @@
 package models
 
 type Price struct {
-	Id           uint `json:"id" gorm:"primaryKey"`
-	Product      Product
+	Id           uint    `json:"id" gorm:"primaryKey"`
+	Product      Product `json:"-"`
 	ProductID    uint    `json:"product_id" gorm:"unique"`
 	ProductCode  string  `json:"product_code" gorm:"unique"`
 	QuantityMost float64 `json:"quantity_most"`
