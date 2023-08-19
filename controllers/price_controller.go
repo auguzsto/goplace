@@ -12,7 +12,7 @@ import (
 func FindAllPrice(c *gin.Context) {
 	var prices []models.Price
 
-	if err := configs.DB.Find(&prices).Error; err != nil {
+	if err := configs.DB.Preload("Product").Find(&prices).Error; err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
@@ -29,7 +29,7 @@ func FindPriceByProductId(c *gin.Context) {
 		return
 	}
 
-	if err := configs.DB.Where("product_id = ?", product.ID).First(&price).Error; err != nil {
+	if err := configs.DB.Preload("Product").Where("product_id = ?", product.ID).First(&price).Error; err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
@@ -39,6 +39,7 @@ func FindPriceByProductId(c *gin.Context) {
 
 func AddPrice(c *gin.Context) {
 	var product models.Product
+	var price models.Price
 	var dto dto.PriceDTO
 
 	if err := c.ShouldBindJSON(&dto); err != nil {
@@ -54,7 +55,6 @@ func AddPrice(c *gin.Context) {
 	if err := configs.DB.Create(&models.Price{
 		Product:      product,
 		ProductID:    product.ID,
-		ProductCode:  product.Code,
 		QuantityMost: dto.QuantityMost,
 		Price:        dto.Price,
 		PriceMost:    dto.PriceMost,
@@ -64,7 +64,9 @@ func AddPrice(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, dto)
+	configs.DB.Preload("Product").Find(&price)
+
+	c.IndentedJSON(http.StatusOK, price)
 
 }
 
@@ -87,7 +89,7 @@ func UpdatePriceByProductId(c *gin.Context) {
 		return
 	}
 
-	configs.DB.Where("product_id = ?", c.Param("product_id")).First(&price)
+	configs.DB.Preload("Product").Where("product_id = ?", c.Param("product_id")).First(&price)
 
 	c.IndentedJSON(http.StatusOK, price)
 }

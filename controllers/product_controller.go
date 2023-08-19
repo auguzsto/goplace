@@ -40,6 +40,8 @@ func AddProduct(c *gin.Context) {
 		Quantity: product.Quantity,
 	})
 
+	configs.DB.Find(&product)
+
 	c.IndentedJSON(http.StatusOK, product)
 }
 
