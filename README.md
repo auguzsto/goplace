@@ -9,7 +9,7 @@ Just practicing and implementing Go in a backend project for studies
 - [x] Delete
 
 ### Price
-- [ ] Create
+- [x] Create
 - [ ] Read
 - [ ] Update
 - [ ] Delete
