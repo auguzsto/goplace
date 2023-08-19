@@ -8,7 +8,7 @@ Just practicing and implementing Go in a backend project for studies
 - [x] Update
 - [x] Delete
 
-### Stock
+### Price
 - [ ] Create
 - [ ] Read
 - [ ] Update

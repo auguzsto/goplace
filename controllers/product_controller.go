@@ -10,7 +10,6 @@ import (
 )
 
 func FindAllProducts(c *gin.Context) {
-
 	var products []models.Product
 
 	configs.DB.Find(&products)
@@ -30,7 +29,6 @@ func FindByIdProduct(c *gin.Context) {
 }
 
 func AddProduct(c *gin.Context) {
-
 	var product models.Product
 
 	if err := c.ShouldBindJSON(&product); err != nil {
@@ -38,8 +36,8 @@ func AddProduct(c *gin.Context) {
 	}
 
 	configs.DB.Create(&models.Product{
-		Code:  product.Code,
-		Price: product.Price,
+		Code:     product.Code,
+		Quantity: product.Quantity,
 	})
 
 	c.IndentedJSON(http.StatusOK, product)
@@ -60,7 +58,7 @@ func UpdateById(c *gin.Context) {
 		return
 	}
 
-	if err := configs.DB.Model(&product).Updates(&models.Product{Code: dto.Code, Price: dto.Price}).Error; err != nil {
+	if err := configs.DB.Model(&product).Updates(&models.Product{Code: dto.Code, Quantity: dto.Quantity}).Error; err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
