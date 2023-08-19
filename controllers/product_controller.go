@@ -5,12 +5,12 @@ import (
 	"goplace/dto"
 	"goplace/models"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 func FindAllProducts(c *gin.Context) {
-
 	var products []models.Product
 
 	configs.DB.Find(&products)
@@ -18,7 +18,7 @@ func FindAllProducts(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, products)
 }
 
-func FindByIdProduct(c *gin.Context) {
+func FindProductById(c *gin.Context) {
 	var product models.Product
 
 	if err := configs.DB.First(&product, c.Param("id")).Error; err != nil {
@@ -30,7 +30,6 @@ func FindByIdProduct(c *gin.Context) {
 }
 
 func AddProduct(c *gin.Context) {
-
 	var product models.Product
 
 	if err := c.ShouldBindJSON(&product); err != nil {
@@ -38,29 +37,31 @@ func AddProduct(c *gin.Context) {
 	}
 
 	configs.DB.Create(&models.Product{
-		Code:  product.Code,
-		Price: product.Price,
+		Code:     product.Code,
+		Quantity: product.Quantity,
 	})
+
+	configs.DB.Find(&product)
 
 	c.IndentedJSON(http.StatusOK, product)
 }
 
-func UpdateById(c *gin.Context) {
+func UpdateProductById(c *gin.Context) {
 
 	var product models.Product
 	var dto dto.ProductDTO
+
+	if err := configs.DB.First(&product, c.Param("id")).Error; err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
 
 	if err := c.ShouldBindJSON(&dto); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	if err := configs.DB.First(&product, c.Param("id")).Error; err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	if err := configs.DB.Model(&product).Updates(&models.Product{Code: dto.Code, Price: dto.Price}).Error; err != nil {
+	if err := configs.DB.Model(&product).Updates(&models.Product{Code: dto.Code, Quantity: dto.Quantity}).Error; err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
@@ -69,19 +70,23 @@ func UpdateById(c *gin.Context) {
 
 }
 
-func DeleteById(c *gin.Context) {
-
+func DeleteProductById(c *gin.Context) {
 	var product models.Product
+	time := time.Now()
 
 	if err := configs.DB.First(&product, c.Param("id")).Error; err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	if err := configs.DB.Delete(&product, c.Param("id")).Error; err != nil {
+	if err := configs.DB.Model(&product).Updates(&models.Product{
+		DeletedAt: time,
+	}).Error; err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
+
+	configs.DB.First(&product)
 
 	c.IndentedJSON(http.StatusOK, product)
 
