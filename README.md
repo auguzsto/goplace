@@ -11,5 +11,5 @@ Just practicing and implementing Go in a backend project for studies
 ### Price
 - [x] Create
 - [x] Read
-- [ ] Update
+- [x] Update
 - [ ] Delete
