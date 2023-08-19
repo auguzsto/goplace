@@ -48,12 +48,12 @@ func UpdateById(c *gin.Context) {
 	var product models.Product
 	var dto dto.ProductDTO
 
-	if err := c.ShouldBindJSON(&dto); err != nil {
+	if err := configs.DB.First(&product, c.Param("id")).Error; err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	if err := configs.DB.First(&product, c.Param("id")).Error; err != nil {
+	if err := c.ShouldBindJSON(&dto); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}

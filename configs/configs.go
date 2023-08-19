@@ -17,7 +17,7 @@ func ConnectionDatabase() {
 	}
 
 	//Run migrations
-	database.AutoMigrate(&models.Product{})
+	database.AutoMigrate(&models.Product{}, &models.Price{})
 
 	DB = database
 }

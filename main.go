@@ -16,6 +16,7 @@ func main() {
 
 	//Routes
 	routes.ProductRoute(http)
+	routes.PriceRoute(http)
 
 	//Run
 	http.Run("0.0.0.0:6000")
