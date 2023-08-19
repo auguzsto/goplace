@@ -12,4 +12,4 @@ Just practicing and implementing Go in a backend project for studies
 - [x] Create
 - [x] Read
 - [x] Update
-- [ ] Delete
+- [x] Delete
