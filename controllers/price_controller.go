@@ -111,7 +111,7 @@ func DetelePriceByProductId(c *gin.Context) {
 		return
 	}
 
-	configs.DB.Preload("Product").Find(&price)
+	configs.DB.Preload("Product").First(&price)
 
 	c.IndentedJSON(http.StatusOK, &price)
 }

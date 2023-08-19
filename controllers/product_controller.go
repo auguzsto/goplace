@@ -5,6 +5,7 @@ import (
 	"goplace/dto"
 	"goplace/models"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +18,7 @@ func FindAllProducts(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, products)
 }
 
-func FindByIdProduct(c *gin.Context) {
+func FindProductById(c *gin.Context) {
 	var product models.Product
 
 	if err := configs.DB.First(&product, c.Param("id")).Error; err != nil {
@@ -69,19 +70,23 @@ func UpdateProductById(c *gin.Context) {
 
 }
 
-func DeleteById(c *gin.Context) {
-
+func DeleteProductById(c *gin.Context) {
 	var product models.Product
+	time := time.Now()
 
 	if err := configs.DB.First(&product, c.Param("id")).Error; err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	if err := configs.DB.Delete(&product, c.Param("id")).Error; err != nil {
+	if err := configs.DB.Model(&product).Updates(&models.Product{
+		DeletedAt: time,
+	}).Error; err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
+
+	configs.DB.First(&product)
 
 	c.IndentedJSON(http.StatusOK, product)
 

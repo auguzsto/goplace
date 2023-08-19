@@ -8,8 +8,8 @@ import (
 
 func ProductRoute(router *gin.Engine) {
 	router.GET("/products", controllers.FindAllProducts)
-	router.GET("/products/:id", controllers.FindByIdProduct)
+	router.GET("/products/:id", controllers.FindProductById)
 	router.POST("/products", controllers.AddProduct)
 	router.PATCH("/products/:id", controllers.UpdateProductById)
-	router.DELETE("/products/:id", controllers.DeleteById)
+	router.DELETE("/products/:id", controllers.DeleteProductById)
 }
